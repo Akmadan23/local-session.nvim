@@ -10,9 +10,45 @@ local notify = function(msg, level)
     vim.notify(msg, vim.log.levels[level or "WARN"], { title = "LocalSession" })
 end
 
+local update_config = function(user_config)
+    local msg
+
+    for k, v in pairs(user_config) do
+        local invalid
+        local t = type(v)
+        local default_value = config[k]
+
+        if default_value == nil then
+            invalid = fmt("Unknown option: %s", k)
+        elseif t ~= type(default_value) then
+            invalid = fmt("Invalid option: %s. Expected %s, got %s", k, type(default_value), t)
+        end
+
+        if invalid then
+            user_config[k] = nil
+
+            if msg then
+                msg = fmt("%s\n%s", msg, invalid)
+            else
+                msg = invalid
+            end
+        end
+    end
+
+    if msg then
+        notify(msg)
+    end
+
+    vim.tbl_extend("force", config, user_config)
+end
+
 local M = {}
 
-M.setup = function()
+M.setup = function(user_config)
+    if user_config then
+        update_config(user_config or {})
+    end
+
     api.nvim_create_autocmd("VimEnter", {
         group = api.nvim_create_augroup("LocalSession", {}),
         once = true,
