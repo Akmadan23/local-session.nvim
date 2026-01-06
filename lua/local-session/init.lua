@@ -77,9 +77,28 @@ M.setup = function(user_config)
             end
         end
     })
+
+    api.nvim_create_user_command("LocalSessionLoad", function(x)
+        M.load(x.fargs[1])
+    end, {
+        nargs = "?",
+        complete = "dir"
+    })
 end
 
-M.load = function()
+---@param path string|nil
+M.load = function(path)
+    if path then
+        if path == vim.fn.getcwd() then
+            path = nil
+        elseif vim.fn.isdirectory(vim.fn.expand(path)) == 1 then
+            vim.cmd.cd(path)
+        else
+            notify(fmt("Error: '%s' is not a directory.", path))
+            return
+        end
+    end
+
     if vim.fn.filereadable(config.filename) == 0 then
         -- quit immediately if no session file is found
         return
@@ -136,6 +155,10 @@ M.load = function()
                 win.setup(tab)
             end
         end
+    end
+
+    if path then
+        vim.cmd.cd("-")
     end
 
     api.nvim_set_current_win(win.focus_id)
