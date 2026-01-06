@@ -2,14 +2,29 @@ local win = require("local-session.win")
 local fmt = string.format
 local api = vim.api
 
+---@class FileSpec
+---@field [1] string|nil
+---@field focus boolean|nil
+---@field opts table|nil
+---@field split FileSpec|nil
+---@field vsplit FileSpec|nil
+---@field callback string|function|nil
+
+---@class RootSpec: FileSpec
+---@field tabs (FileSpec|string)[]|nil
+---@field config function|nil
+
 local config = {
     filename = ".session.lua"
 }
 
+---@param msg string
+---@param level string|nil
 local notify = function(msg, level)
     vim.notify(msg, vim.log.levels[level or "WARN"], { title = "LocalSession" })
 end
 
+---@param user_config table
 local update_config = function(user_config)
     local msg
 
@@ -44,6 +59,7 @@ end
 
 local M = {}
 
+---@param user_config table|nil
 M.setup = function(user_config)
     if user_config then
         update_config(user_config or {})
@@ -70,6 +86,7 @@ M.load = function()
     end
 
     -- try to run session file
+    ---@type _, RootSpec
     local ok, res = pcall(dofile, config.filename)
 
     if not ok then
