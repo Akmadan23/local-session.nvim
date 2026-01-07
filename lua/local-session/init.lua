@@ -84,6 +84,12 @@ M.setup = function(user_config)
         nargs = "?",
         complete = "dir"
     })
+
+    api.nvim_create_user_command("LocalSessionEdit", function()
+        M.edit()
+    end, {
+        nargs = 0,
+    })
 end
 
 ---@param path string|nil
@@ -162,6 +168,15 @@ M.load = function(path)
     end
 
     api.nvim_set_current_win(win.focus_id)
+end
+
+M.edit = function()
+    if vim.fn.filereadable(config.filename) == 0 then
+        notify(fmt("No '%s' found at %s.", config.filename, vim.fn.getcwd()))
+        return
+    end
+
+    vim.cmd.edit(config.filename)
 end
 
 return M
