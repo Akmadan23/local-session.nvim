@@ -137,7 +137,8 @@ The plugin comes with the following defaults:
 
 ```lua
 require("local-session").setup {
-  filename = ".session.lua" -- name of session files
+  filename = ".session.lua",    -- name of session files
+  notify_session_loaded = true, -- if true a success notification will be displayed when a session file is loaded
 }
 ```
 

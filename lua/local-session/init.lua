@@ -15,7 +15,8 @@ local api = vim.api
 ---@field config function|nil
 
 local config = {
-    filename = ".session.lua"
+    filename = ".session.lua",
+    notify_session_loaded = true,
 }
 
 ---@param msg string
@@ -168,6 +169,10 @@ M.load = function(path)
     end
 
     api.nvim_set_current_win(win.focus_id)
+
+    if config.notify_session_loaded then
+        notify("Session loaded successfully.", "INFO")
+    end
 end
 
 M.edit = function()
