@@ -55,7 +55,8 @@ local update_config = function(user_config)
         notify(msg)
     end
 
-    vim.tbl_extend("force", config, user_config)
+    -- Update the config with user preferences
+    config = vim.tbl_extend("force", config, user_config)
 end
 
 local M = {}

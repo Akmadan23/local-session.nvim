@@ -98,7 +98,7 @@ return {
 
 ## Installation
 Install it with your plugin manager of choice, just remember
-to call che `setup` function, otherwise it will not work.
+to call the `setup` function, otherwise it will not work.
 Lazy loading is __not__ recommended since `local-session.nvim` needs
 to be active at the very beginning of the neovim start process.
 

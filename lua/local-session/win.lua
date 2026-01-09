@@ -3,7 +3,7 @@ local M = {}
 -- ID of focused window (first by default)
 M.focus_id = 1000
 
----@param win FileSpec|string
+---@param win FileSpec
 M.setup = function(win)
     if type(win.opts) == "table" then
         for key, value in pairs(win.opts) do
