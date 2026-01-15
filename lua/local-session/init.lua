@@ -31,21 +31,22 @@ end
 
 ---@param user_config table
 local update_config = function(user_config)
-    local msg
+    local msg -- message to be displayed if errors are detected
 
-    for k, v in pairs(user_config) do
+    for user_k, user_v in pairs(user_config) do
         local invalid
-        local t = type(v)
-        local default_value = config[k]
+        local default_v = config[user_k]
+        local user_t = type(user_v)
+        local default_t = type(default_v)
 
-        if default_value == nil then
-            invalid = fmt("Unknown option: %s", k)
-        elseif t ~= type(default_value) then
-            invalid = fmt("Invalid option: %s. Expected %s, got %s", k, type(default_value), t)
+        if default_v == nil then
+            invalid = fmt("Unknown option: %s", user_k)
+        elseif user_t ~= default_t then
+            invalid = fmt("Invalid option: %s. Expected %s, got %s", user_k, default_t, user_t)
         end
 
         if invalid then
-            user_config[k] = nil
+            user_config[user_k] = nil
 
             if msg then
                 msg = fmt("%s\n%s", msg, invalid)
@@ -68,7 +69,7 @@ local M = {}
 ---@param user_config table|nil
 M.setup = function(user_config)
     if user_config then
-        update_config(user_config or {})
+        update_config(user_config)
     end
 
     api.nvim_create_autocmd("VimEnter", {
