@@ -19,6 +19,10 @@ local config = {
     notify_session_loaded = true,
 }
 
+local session_exists = function()
+    return vim.fn.filereadable(config.filename) == 1
+end
+
 ---@param msg string
 ---@param level string|nil
 local notify = function(msg, level)
@@ -107,7 +111,7 @@ M.load = function(path)
         end
     end
 
-    if vim.fn.filereadable(config.filename) == 0 then
+    if not session_exists() then
         -- quit immediately if no session file is found
         return
     end
@@ -177,7 +181,7 @@ M.load = function(path)
 end
 
 M.edit = function()
-    if vim.fn.filereadable(config.filename) == 0 then
+    if not session_exists() then
         notify(fmt("No '%s' found at %s.", config.filename, vim.fn.getcwd()))
         return
     end
