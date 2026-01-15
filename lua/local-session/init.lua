@@ -156,7 +156,7 @@ M.load = function(path)
             if type(tab) == "string" then
                 local glob_tab = vim.fn.glob(tab)
 
-                if glob_tab == tab then
+                if glob_tab == "" or glob_tab == tab then
                     tabnew(tab)
                 else
                     for _, file in ipairs(vim.split(glob_tab, "\n")) do
