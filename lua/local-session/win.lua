@@ -27,8 +27,8 @@ M.setup = function(win)
         if type(split_val) == "string" then
             vim.cmd[s](split_val)
             break
-        elseif type(split_val) == "table" and type(split_val[1]) == "string" then
-            vim.cmd[s](split_val[1])
+        elseif type(split_val) == "table" and type(split_val.path) == "string" then
+            vim.cmd[s](split_val.path)
             M.setup(split_val)
             break
         end

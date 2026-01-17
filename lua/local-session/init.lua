@@ -3,28 +3,29 @@ local fmt = string.format
 local api = vim.api
 
 ---@class FileSpec
----@field path string|nil
----@field focus boolean|nil
----@field opts table|nil
----@field split FileSpec|nil
----@field vsplit FileSpec|nil
----@field callback string|function|nil
+---@field path string?
+---@field focus boolean?
+---@field opts table?
+---@field split FileSpec?
+---@field vsplit FileSpec?
+---@field callback string|function?
 
 ---@class RootSpec: FileSpec
----@field tabs (FileSpec|string)[]|nil
----@field config function|nil
+---@field tabs (FileSpec|string)[]?
+---@field config function?
 
 local config = {
     filename = ".session.lua",
     notify_session_loaded = true,
 }
 
+---@return boolean
 local session_exists = function()
     return vim.fn.filereadable(config.filename) == 1
 end
 
 ---@param msg string
----@param level string|nil
+---@param level string?
 local notify = function(msg, level)
     vim.notify(msg, vim.log.levels[level or "WARN"], { title = "LocalSession" })
 end
@@ -34,10 +35,10 @@ local update_config = function(user_config)
     local msg -- message to be displayed if errors are detected
 
     for user_k, user_v in pairs(user_config) do
-        local invalid
         local default_v = config[user_k]
         local user_t = type(user_v)
         local default_t = type(default_v)
+        local invalid -- acts as flag and warning message if user option is invalid
 
         if default_v == nil then
             invalid = fmt("Unknown option: %s", user_k)
@@ -66,7 +67,7 @@ end
 
 local M = {}
 
----@param user_config table|nil
+---@param user_config table?
 M.setup = function(user_config)
     if user_config then
         update_config(user_config)
@@ -99,7 +100,7 @@ M.setup = function(user_config)
     })
 end
 
----@param path string|nil
+---@param path string?
 M.load = function(path)
     if path then
         if path == vim.fn.getcwd() then
