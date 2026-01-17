@@ -23,18 +23,18 @@ referred to as the _root table_) with the following properties:
 
 Field       | Type              | Meaning
 ----------- | ----------------- | --------
-\[1\]       | string            | Path¹ to the file
+path        | string            | Path¹ to the file
 focus       | boolean           | If the window should have focus on startup
 opts        | table             | Options local to the buffer of the file
 split²      | File³             | File to be open in a horizontal split
 vsplit²     | File³             | File to be open in a vertical split
 callback    | string\|function  | Vim command (if string) or lua function to be ran in the buffer of the file
-tabs        | table             | List of files to be opened in tabs. If _root table_ has a \[1\] field, `tabs` is ignored.
-config      | function          | Function to be ran before any other operation as a pre-configuration.
+tabs        | table             | \[___root table_ only__\] List of files to be opened in tabs.
+config      | function          | \[___root table_ only__\] Function to be ran before any other operation as a pre-configuration.
 
 > [!IMPORTANT]
-> All fields except \[1\] are optional. \[1\] must be omitted
-> only if we want multiple tabs via the `tabs` field.
+> All fields except `path` are optional. `path` can be omitted
+> in the _root table_ only if there is a valid `tabs` field.
 
 __Footnotes:__
 1. non-absolute paths are considered relative

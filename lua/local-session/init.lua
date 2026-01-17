@@ -3,7 +3,7 @@ local fmt = string.format
 local api = vim.api
 
 ---@class FileSpec
----@field [1] string|nil
+---@field path string|nil
 ---@field focus boolean|nil
 ---@field opts table|nil
 ---@field split FileSpec|nil
@@ -137,11 +137,13 @@ M.load = function(path)
         vim.cmd(res.config)
     end
 
-    if type(res[1]) == "string" then
-        vim.cmd.edit(res[1])
+    if type(res.path) == "string" then
+        vim.cmd.edit(res.path)
         win.setup(res)
-    elseif type(res.tabs) == "table" then
-        local first = true
+    end
+
+    if type(res.tabs) == "table" then
+        local first = not res.path
 
         local tabnew = function(file)
             if first then
@@ -164,8 +166,10 @@ M.load = function(path)
                     end
                 end
             elseif type(tab) == "table" then
-                tabnew(tab[1])
-                win.setup(tab)
+                if type(tab.path) == "string" then
+                    tabnew(tab.path)
+                    win.setup(tab)
+                end
             end
         end
     end
