@@ -18,7 +18,7 @@ on vim startup, where you can specify splits, tabs, custom options
 and callback scripts.
 
 ### Creating a session file
-A session file is a lua file that must return a table (which will be
+Technically, session file is a lua file that must return a table (which will be
 referred to as the _root table_) with the following properties:
 
 Field       | Type              | Meaning
@@ -51,7 +51,7 @@ __Footnotes:__
 ```lua
 return {
   -- the main file to edit
-  "mainFile",
+  path = "mainFile",
 
   -- file to edit in a split (it can also be vsplit)
   split = "myFile2",
@@ -79,12 +79,12 @@ return {
     "myFile2",
     "myFile3",
     "myDir/*", -- can contain wildcards only if it's a string not wrapped by a table
-    { "myDir/*" }, -- this will open the file named "myDir/*" if exists, not every file inside myDir
+    { path = "myDir/*" }, -- this will open the file named "myDir/*" if exists, not every file inside myDir
 
     {
-      "myOtherFile",
+      path = "myOtherFile",
       vsplit = {
-        "mySplitFile",
+        path = "mySplitFile",
         opts = { number = false }
       }
     }
@@ -97,12 +97,9 @@ return {
 > in the first snippet, with all options available.
 
 ## Installation
-Install it with your plugin manager of choice, just remember
-to call the `setup` function, otherwise it will not work.
-Lazy loading is __not__ recommended since `local-session.nvim` needs
-to be active at the very beginning of the neovim start process.
+Install it with your plugin manager of choice,
+here is an example using [lazy](https://github.com/folke/lazy.nvim):
 
-Here is an example using [lazy](https://github.com/folke/lazy.nvim):
 ```lua
 require("lazy").setup {
   ...,
@@ -116,21 +113,13 @@ require("lazy").setup {
 }
 ```
 
-or [pckr](https://github.com/lewis6991/pckr.nvim):
-```lua
-require("pckr").add {
-  ...,
-  {
-    "akmadan23/local-session.nvim",
-    config = function()
-      require("local-session").setup {
-        -- your configuration here
-      }
-    end
-  },
-  ...
-}
-```
+> [!IMPORTANT]
+> Lazy loading is __not__ recommended since `local-session.nvim` needs
+> to be active at the very beginning of the neovim start process.
+
+> [!NOTE]
+> If you use a different plugin manager remember to call
+> the `setup` function, otherwise it will not work.
 
 ## Configuration
 The plugin comes with the following defaults:
